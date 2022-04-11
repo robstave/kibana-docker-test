@@ -40,8 +40,8 @@ it may be located here:
    
 4. Run the scripts to fill in the indices, templates and so on.  Again, this is pretty much the same as the link above, but a tad different. 
 
-  set_index_templates.sh
-  start_datastreams.sh
+	set_index_templates.sh
+	start_datastreams.sh
 
 
 5. Start pushing data.  
