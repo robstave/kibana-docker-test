@@ -144,7 +144,7 @@ curl -k -H "Content-Type: application/json" \
         }
       },
       "delete": {
-        "min_age": "20m",
+        "min_age": "2h",
         "actions": {
           "delete": {}
         }

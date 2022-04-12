@@ -26,7 +26,7 @@ docker-compose up -d
 Command to set up the directories access. Just some housekeeping to get the repo to be writable.
 
 ```
-setup_dirs.sh
+./setup_dirs.sh
 ```
 
 ### Copy over the cert from ES01 to inject data.
@@ -44,8 +44,9 @@ cp es01.crt /<your-location>/kibana-docker-test
 Run the scripts to fill in the indices, templates and so on.  Again, this is pretty much the same as the link above, but a tad different. 
 
 ```
-set_index_templates.sh
-start_datastreams.sh
+./start_ilm_polling.sh
+./set_index_templates.sh
+./start_datastreams.sh
 ```
 
 ### Start pushing data.  
@@ -54,8 +55,8 @@ In this case, I am adding data with start_post1 and start_post2 to add data to b
 I open a new shell for each of these!
 
 ```
-start_post1
-start_post2
+./run_post1
+./run_post2
 ```
 	
 	
