@@ -144,7 +144,7 @@ services:
       - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.license.self_generated.type=${LICENSE}
-      - node.roles=master,data_content,data_warm
+      - node.roles=master,data_warm
       - path.repo=/usr/share/elasticsearch/snapshots
     mem_limit: ${MEM_LIMIT}
     ulimits:
@@ -188,7 +188,7 @@ services:
       - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.license.self_generated.type=${LICENSE}
-      - node.roles=master,data_content,data_cold
+      - node.roles=master,data_cold
       - path.repo=/usr/share/elasticsearch/snapshots
     mem_limit: ${MEM_LIMIT}
     ulimits:
@@ -233,8 +233,9 @@ services:
       - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.license.self_generated.type=${LICENSE}
-      - node.roles=master,data_content,data_frozen
+      - node.roles=master,data_frozen
       - path.repo=/usr/share/elasticsearch/snapshots
+      - xpack.searchable.snapshot.shared_cache.size=10%
     mem_limit: ${MEM_LIMIT}
     ulimits:
       memlock:

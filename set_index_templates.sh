@@ -17,29 +17,52 @@ curl -k -H "Content-Type: application/json" \
 '
 
 
-
 echo -e "\n"
-echo -e "creating index template"
-
+echo -e "creating snap policy:"
 curl -k -H "Content-Type: application/json" \
 -u elastic:elastic \
 -H 'kbn-xsrf: true' \
--XPUT "https://localhost:9200/_index_template/readings" \
+-XPUT "https://localhost:9200/_slm/policy/snapshot-policy" \
 -d'
 {
-  "index_patterns": ["readings-*"],
+  "schedule": "0 0/20 * * * ?", 
+  "name": "<snapshot-{now/d}>", 
+  "repository": "readings-snapshots-repository", 
+  "config": { 
+    "indices": ["readings-prime"] 
+  },
+  "retention": { 
+    "expire_after": "30d", 
+    "min_count": 5, 
+    "max_count": 100 
+  }
+}
+'
+
+
+echo -e "\n"
+echo -e "creating component mappings:"
+curl -k -H "Content-Type: application/json" \
+-u elastic:elastic \
+-H 'kbn-xsrf: true' \
+-XPUT "https://localhost:9200/_component_template/readings-mappings" \
+-d'
+{
   "template": {
-    "settings": {
-      "number_of_shards": 1,
-      "number_of_replicas": 0
-    },
     "mappings": {
       "properties": {
+        "@timestamp": {
+          "type": "date",
+          "format": "date_optional_time||epoch_millis"
+        },
         "client_id": {
           "type": "integer"
         },
         "created_at": {
           "type": "date"
+        },
+                "level": {
+          "type": "integer"
         },
         "temp": {
           "type": "float"
@@ -47,12 +70,16 @@ curl -k -H "Content-Type: application/json" \
         "rssi": {
           "type": "float"
         }
-
       }
     }
+  },
+  "_meta": {
+    "description": "Mappings for orders indices"
   }
 }
 '
+
+
 
 echo -e "\n"
 echo -e "creating lifecycle policies:"
@@ -121,8 +148,11 @@ curl -k -H "Content-Type: application/json" \
         }
       },
       "delete": {
-        "min_age": "1h",
+        "min_age": "30m",
         "actions": {
+          "wait_for_snapshot": {
+            "policy": "snapshot-policy"
+          },
           "delete": {}
         }
       }
@@ -153,8 +183,6 @@ curl -k -H "Content-Type: application/json" \
 }
 '
 
-
-
 curl -k -H "Content-Type: application/json" \
 -u elastic:elastic \
 -H 'kbn-xsrf: true' \
@@ -175,47 +203,11 @@ curl -k -H "Content-Type: application/json" \
 '
 
 
+
+
+
 echo -e "\n"
-echo -e "creating component mappings:"
-
-
-curl -k -H "Content-Type: application/json" \
--u elastic:elastic \
--H 'kbn-xsrf: true' \
--XPUT "https://localhost:9200/_component_template/readings-mappings" \
--d'
-{
-  "template": {
-    "mappings": {
-      "properties": {
-        "@timestamp": {
-          "type": "date",
-          "format": "date_optional_time||epoch_millis"
-        },
-        "client_id": {
-          "type": "integer"
-        },
-        "created_at": {
-          "type": "date"
-        },
-                "level": {
-          "type": "integer"
-        },
-        "temp": {
-          "type": "float"
-        },
-        "rssi": {
-          "type": "float"
-        }
-      }
-    }
-  },
-  "_meta": {
-    "description": "Mappings for orders indices"
-  }
-}
-'
-
+echo -e "creating index template"
 echo -e "\n"
 echo -e "creating index templages from settings and mappings:"
 

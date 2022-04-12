@@ -51,6 +51,7 @@ start_datastreams.sh
 ### Start pushing data.  
 
 In this case, I am adding data with start_post1 and start_post2 to add data to both streams.
+I open a new shell for each of these!
 
 ```
 start_post1
