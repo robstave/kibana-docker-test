@@ -18,7 +18,7 @@ curl -k -H "Content-Type: application/json" \
 
 
 echo -e "\n"
-echo -e "creating snap policy:"
+echo -e "creating snapshot policy:"
 curl -k -H "Content-Type: application/json" \
 -u elastic:elastic \
 -H 'kbn-xsrf: true' \
@@ -79,11 +79,8 @@ curl -k -H "Content-Type: application/json" \
 }
 '
 
-
-
 echo -e "\n"
 echo -e "creating lifecycle policies:"
-
 
 curl -k -H "Content-Type: application/json" \
 -u elastic:elastic \
@@ -96,16 +93,16 @@ curl -k -H "Content-Type: application/json" \
       "hot": {
         "actions": {
           "rollover": {
-            "max_age": "5m"
+            "max_age": "2m"
           }
         }
       },
       "warm": {
-        "min_age": "10m",
+        "min_age": "5m",
         "actions": {}
       },
       "delete": {
-        "min_age": "30m",
+        "min_age": "10m",
         "actions": {
           "delete": {}
         }
@@ -114,7 +111,6 @@ curl -k -H "Content-Type: application/json" \
   }
 }
 '
-
 
 curl -k -H "Content-Type: application/json" \
 -u elastic:elastic \
@@ -127,20 +123,20 @@ curl -k -H "Content-Type: application/json" \
       "hot": {
         "actions": {
           "rollover": {
-            "max_age": "5m"
+            "max_age": "2m"
           }
         }
       },
       "warm": {
-        "min_age": "10m",
+        "min_age": "5m",
         "actions": {}
       },
       "cold": {
-        "min_age": "20m",
+        "min_age": "10m",
         "actions": {}
       },
       "frozen": {
-        "min_age": "30m",
+        "min_age": "15m",
         "actions": {
           "searchable_snapshot": {
             "snapshot_repository": "readings-snapshots-repository"
@@ -148,11 +144,8 @@ curl -k -H "Content-Type: application/json" \
         }
       },
       "delete": {
-        "min_age": "30m",
+        "min_age": "20m",
         "actions": {
-          "wait_for_snapshot": {
-            "policy": "snapshot-policy"
-          },
           "delete": {}
         }
       }

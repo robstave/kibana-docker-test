@@ -8,7 +8,7 @@ curl -k -H "Content-Type: application/json" \
 -d'
   {
   "@timestamp": "'"${NOW}"'",
-  "client_id":58,
+  "client_id":99,
   "level":10,
   "temp":"'"${TEMP}"'",
   "rssi":-3.95
